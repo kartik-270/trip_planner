@@ -1,0 +1,119 @@
+/* Reset */
+body, h1, p, a {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Body Styling */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #e3f2fd; /* Sky blue theme */
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    background-image: url('https://png.pngtree.com/background/20210709/original/pngtree-color-travel-tourism-vacation-picture-image_917677.jpg');
+    background-size: cover;
+}
+
+/* Login Container */
+.login-container {
+    display: flex;
+    width: 100%;
+    max-width:900px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* Login Box */
+.login-box {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.title {
+    font-size: 4rem;
+    font-weight: bold;
+    color: #007BFF; /* Blue color */
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-size: 1.5rem;
+    color:black;
+    margin-bottom: 30px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+input[type="email"], input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 24px;
+}
+
+label {
+    display: block;
+    font-size: 2rem;
+    margin-bottom: 5px;
+    color:black;
+    font-weight: bolder;
+}
+.login-button a{
+color: #ffffff;
+text-decoration: none;
+font-size: 1.5rem;
+}
+
+.login-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+    background-color: #0056b3;
+}
+
+.links {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.links a {
+    font-size: 1.2rem;
+    color: #007BFF;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.links a:hover {
+    color: #0056b3;
+}
+
+/* Background Image Section */
+.background-image {
+    flex: 1;
+    background: url('https://source.unsplash.com/900x900/?travel,beach') no-repeat center;
+    background-size: cover;
+}
