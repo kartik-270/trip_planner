@@ -23,7 +23,7 @@ app.config['MAIL_DEFAULT_SENDER'] = 'kartik2310179@akgec.ac.in'
 mail = Mail(app)
 
 # MongoDB configuration
-client = MongoClient('mongodb://localhost:27017/')
+client = MongoClient('mongodb+srv://kartik2310179:2H1yMr6PjfGhyZIL@cluster0.95nrk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
 db = client['trip_planner_db']
 users_collection = db['users']
 
