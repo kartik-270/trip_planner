@@ -5,27 +5,90 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>online trip planner website</title>
     <meta name="title" content="online trip planner website">
-    <link rel="stylesheet" href="..\static\css\trip.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/trip.css') }}">
     
 </head>
+<style>
+    .container {
+width: 25%;
+margin: 0 auto;
+font-family: Arial, sans-serif;
+}
+
+/* Header and welcome message */
+h1 {
+color: #333;
+font-size: 2em;
+margin-bottom: 20px;
+}
+
+/* Saved planner section */
+.saved-planner {
+background-color: #fff1c1;
+padding: 20px;
+border-radius: 8px;
+margin-bottom: 20px;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.saved-planner h2 {
+font-size: 1.8em;
+margin-bottom: 15px;
+}
+
+.planner-content {
+font-size: 1em;
+color: #333;
+line-height: 1.6;
+}
+
+.planner-content img {
+max-width: 100%;
+height: auto;
+border-radius: 8px;
+}
+
+/* Plan new trip button */
+.planner-actions {
+margin-top: 20px;
+}
+
+.btn-plan-trip {
+padding: 10px 20px;
+background-color: #4CAF50;
+color: white;
+text-decoration: none;
+border-radius: 5px;
+font-size: 1.1em;
+}
+
+.btn-plan-trip:hover {
+background-color: #45a049;}
+</style>
 <body>
     <!-- <header class="header"> -->
         <header>
             <div class="logo">
                 <a href="#"><img src="..\static\images\DALL·E 2024-12-05 23.35.14 - A modern and sleek logo design for a trip planner website. The logo features a stylized globe with a plane circling it, incorporating a vibrant gradie.webp" alt="logo"></a>
             </div>
-            <nav class="nav-menu" ">
+            <nav class="nav-menu">
                 <ul>
                     <li><a href="#home">Home</a></li>
                     <li><a href="#about">About</a></li>
-                    <li><a href="#"><a href="..\templates\contact.html">Contact</a></li>
+                    <li><a href="{{ url_for('contact') }}">Contact</a></li>
                     <li><a href="#destination">Destination</a></li>
-                    <li><a href="..\templates\login.html">Login</a></li>
-                    <li><a href="..\templates\sign.html">SignUp</a></li>
+                    {% if 'user' in session %}
+                        <li><a href="#">Hello, {{ session['user'] }}!</a></li>
+                        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('signup') }}">SignUp</a></li>
+                        <li><a href="{{ url_for('login') }}">Login</a></li>
+                    {% endif %}
                 </ul>
             </nav>
         </header>
     <!-- </header> -->
+
     <main>
         <section class="hero" id="home">
             <div class="hero-image" >
@@ -34,9 +97,38 @@
             <div class="hero-content">
                 <h1>Welcome To Trip Planner Website</h1>
                 <p>Discover amazing destination and plan your next trip with us.</p>
-                <a href="#" class="hero-button"><b>Plan now</b></a>
+                <a href="{{ url_for('plan') }}" class="hero-button"><b>Plan now</b></a>
             </div>
+            
         </section>
+    </main>
+        
+
+    {% if saved_planner %}
+    <div class="container" style="margin-top: 10px;">
+        <section id="home">
+            <h1>Welcome, {{ user }}!</h1>
+            <h2>Your saved trip planner:</h2>
+
+            
+                <div class="saved-planner">
+                    <h3> Your Trip Itinerary</h2>
+                    <!-- Render the saved planner HTML directly -->
+                    <div class="planner-content">
+                        {{ saved_planner | safe }}
+                    </div>
+                </div>
+
+            
+        </section>
+
+        <div class="planner-actions">
+            <!-- Optionally, you can add a button to plan a new trip -->
+            <center><a href="{{ url_for('plan') }}" class="btn-plan-trip">Plan a New Trip</a></center>
+        </div>
+    </div>
+    {% endif %}
+    </main>
         <section class="destination" id="destination">
             <h2>Popular Destination</h2>
             <div id="destination-grid">
@@ -62,7 +154,7 @@
                 </div>
             </div>
         </div>
-        </section>
+        <!-- </section>
         <section class="destination" id="destination">
             <h2>Featured Hotel</h2>
             <div id="destination-grid">
@@ -85,7 +177,7 @@
                 </div>
             </div>
         </div>
-        </section>
+        </section> -->
         
         <section class="destination">
             <h2>Featured Activities</h2>
@@ -159,7 +251,7 @@
                         <ul>
                             <li><a href="#home">Home</a></li>
                             <li><a href="#about">About</a></li>
-                            <li><a href="#contact"><a href="http://127.0.0.1:5500/contact.html">Contact </a></li>
+                            <li><a href="#contact"><a href="{{ url_for('contact') }}">Contact </a></li>
                             <li><a href="#destination">Destinations</a></li>
                         </ul>
                     </div>

@@ -109,3 +109,20 @@ label {
     background: url('https://source.unsplash.com/900x900/?travel,adventure') no-repeat center;
     background-size: cover;
 }
+/* Example CSS */
+.flash-messages .alert {
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.alert-success {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.alert-danger {
+    background-color: #f44336;
+    color: white;
+}

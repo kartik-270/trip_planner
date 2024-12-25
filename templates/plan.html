@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trip Planner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/trip.css') }}">
+    <style>
+        /* Custom Dropdown Styling */
+        .dropdown {
+            position: relative;
+            width: 100%;
+            align-self: center;
+        }
+
+        .dropdown input {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #000000;
+            border-radius: 5px;
+            position: relative;
+            left: 23%;
+        }
+
+        .dropdown-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            z-index: 1;
+            display: none;
+        }
+
+        .dropdown-list div {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .dropdown-list div:hover {
+            background-color: #f0f0f0;
+        }
+
+        .dropdown.open .dropdown-list {
+            display: block;
+        }
+
+        .dropdown-arrow {
+            position: absolute;
+            right: 26%;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            pointer-events: none;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown.open .dropdown-arrow {
+            transform: translateY(-50%) rotate(180deg); /* Rotate the arrow */
+        }
+
+        input:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        /* Itinerary Styling */
+        #itinerary {
+            margin-top: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #ecf0f1;
+        }
+
+        #itinerary h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #000000;
+        }
+
+        #itinerary div {
+            padding: 10px;
+            margin-bottom: 10px;
+           
+            border-radius: 5px;
+        }
+
+        #itinerary div img {
+            margin-top: 10px;
+            max-width: 100%;
+            border-radius: 5px;
+        }
+
+        /* Separator between days */
+        #itinerary hr {
+            border: 0;
+            border-top: 1px solid #a3a1a1;
+            margin: 20px 0;
+        }
+
+        /* Spacing between itinerary items */
+        #itinerary .item {
+            margin-bottom: 15px;
+        }
+
+        /* Styling for item details */
+        .itinerary-item {
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <header style="background-color: white;">
+        <div class="logo">
+            <a href="#"><img src="..\static\images\DALL·E 2024-12-05 23.35.14 - A modern and sleek logo design for a trip planner website. The logo features a stylized globe with a plane circling it, incorporating a vibrant gradie.webp" alt="logo"></a>
+        </div>
+        <nav class="nav-menu" ">
+            <ul>
+                <li><a href="{{ url_for('index')}}">Home</a></li>
+                <li><a href="{{ url_for('index')+'#about'}}">About</a></li>
+                <li><a href="#"><a href="{{ url_for('contact') }}">Contact</a></li>
+                <li><a href="{{ url_for('index')+'#destination'}}">Destination</a></li>
+                {% if 'user' in session %}
+                        <li><a href="#">Hello, {{ session['user'] }}!</a></li>
+                        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('signup') }}">SignUp</a></li>
+                        <li><a href="{{ url_for('login') }}">Login</a></li>
+                    {% endif %}
+            </ul>
+        </nav>
+    </header>
+    <div class="stApp" style="position: relative;top:10px ;">
+        <h1>Trip Planner</h1>
+        <h2>Customize your travel experience</h2>
+        <br><br>
+        <form id="tripForm">
+            <label for="city">Select the city:</label>
+            <div class="dropdown" id="dropdownCity">
+                <input type="text" id="city" name="city" placeholder="Start typing a city..." autocomplete="off" required>
+                <div class="dropdown-arrow">&#9660;</div> <!-- Down arrow icon -->
+                <div class="dropdown-list" id="cityList">
+                    {% for city in cities %}
+                        <div class="city-option">{{ city }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <label for="days">Enter the number of days:</label>
+            <input type="number" id="days" name="days" min="1" max="10" value="2">
+
+            <label for="rating">Minimum rating (0-5):</label>
+            <input type="range" id="rating" name="rating" min="0" max="5" step="0.5" value="4">
+            <span id="ratingValue">4.0</span>
+
+            <label for="max_distance">Maximum distance from city center (Km):</label>
+            <input type="number" id="max_distance" name="max_distance" min="0" max="50" value="10">
+
+            <button type="submit">Plan Trip</button>
+        </form>
+        
+        <div id="itinerary">
+            <!-- The itinerary will be displayed here -->
+        </div>
+        <center><button id="savePlannerBtn" style="display: none;">Save My Planner</button></center>
+    </div>
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section about">
+                <h2>About Trip Planner</h2>
+                <p>Your ultimate travel companion! Plan your trips effortlessly with our expert recommendations and seamless options.</p>
+            </div>
+            <div class="footer-section links">
+                <h2>Quick Links</h2>
+                <ul>
+                    <li><a href="{{ url_for('index')}}">Home</a></li>
+                    <li><a href="{{ url_for('index')+'#about'}}">About</a></li>
+                    <li><a href="{{ url_for('contact') }}">Contact </a></li>
+                    <li><a href="{{ url_for('index')+'#destination'}}">Destinations</a></li>
+                    
+                </ul>
+            </div>
+            <div class="footer-section social-media">
+                <h2>Follow Us</h2>
+                <div class="social-icons">
+                    <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6c/Facebook_Logo_2023.png" alt="Facebook">Facebook</a>
+                    <a href="#"><img src="https://freepnglogo.com/images/all_img/1707222563twitter-logo-png.png" alt="Twitter">Twitter</a>
+                    <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/2048px-Instagram_logo_2022.svg.png" alt="Instagram">Instagram</a>
+                    <a href="#"><img src="https://static.vecteezy.com/system/resources/previews/018/930/480/non_2x/linkedin-logo-linkedin-icon-transparent-free-png.png" alt="LinkedIn">LinkedIn</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Trip Planner. All rights reserved.</p>
+        </div>
+    </footer>
+    <script>
+        // Update rating value display
+        const ratingSlider = document.getElementById('rating');
+        const ratingValue = document.getElementById('ratingValue');
+        ratingSlider.oninput = function() {
+            ratingValue.textContent = this.value;
+        }
+
+        // Handle city selection and autocomplete dropdown
+        const cityInput = document.getElementById('city');
+        const cityList = document.getElementById('cityList');
+        const cityOptions = document.querySelectorAll('.city-option');
+        const dropdown = document.getElementById('dropdownCity');
+        const dropdownArrow = document.querySelector('.dropdown-arrow'); // Arrow element
+
+        // Show the dropdown when the input is focused (clicked)
+        cityInput.addEventListener('focus', function() {
+            cityList.style.display = 'block'; // Show the dropdown
+            dropdown.classList.add('open');  // Rotate the arrow
+        });
+
+        // Filter city options based on input text
+        cityInput.addEventListener('input', function() {
+            const filter = cityInput.value.toLowerCase();
+            let matchCount = 0;
+
+            cityOptions.forEach(function(option) {
+                const cityName = option.textContent.toLowerCase();
+                if (cityName.indexOf(filter) > -1) {
+                    option.style.display = 'block';
+                    matchCount++;
+                } else {
+                    option.style.display = 'none';
+                }
+            });
+
+            // Hide the dropdown if no matches are found
+            if (matchCount === 0) {
+                cityList.style.display = 'none';
+                dropdown.classList.remove('open');  // Reset the arrow if no matches
+            }
+        });
+
+        // Select a city from the dropdown
+        cityOptions.forEach(function(option) {
+            option.addEventListener('click', function() {
+                cityInput.value = option.textContent;
+                cityList.style.display = 'none';  // Hide the dropdown after selection
+                dropdown.classList.remove('open');  // Reset the arrow after selection
+            });
+        });
+
+        // Hide the dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!dropdown.contains(event.target)) {
+                cityList.style.display = 'none';
+                dropdown.classList.remove('open');  // Reset the arrow when clicking outside
+            }
+        });
+        // Handle "Save My Planner" button click
+const savePlannerBtn = document.getElementById('savePlannerBtn');
+savePlannerBtn.addEventListener('click', function () {
+    const itineraryContainer = document.getElementById('itinerary');
+    const itineraryHTML = itineraryContainer.innerHTML;
+
+    fetch('/save_planner', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ itinerary: itineraryHTML }),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            alert(data.message); // Notify the user
+        })
+        .catch((error) => console.error('Error:', error));
+});
+
+// Show "Save My Planner" button after generating itinerary
+function showSaveButton() {
+    savePlannerBtn.style.display = 'block';
+}
+
+        // Handle form submission
+        document.getElementById('tripForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const city = cityInput.value;
+            const days = document.getElementById('days').value;
+            const rating = document.getElementById('rating').value;
+            const max_distance = document.getElementById('max_distance').value;
+
+            fetch('/plan_trip', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `city=${city}&days=${days}&rating=${rating}&max_distance=${max_distance}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                const itineraryContainer = document.getElementById('itinerary');
+                itineraryContainer.innerHTML = '';
+
+                for (const day in data) {
+                    const dayHeader = document.createElement('h3');
+                    dayHeader.textContent = `Day ${day.slice(-1)}`;
+                    itineraryContainer.appendChild(dayHeader);
+
+                    data[day].forEach(item => {
+                        const itemDiv = document.createElement('div');
+                        itemDiv.classList.add('item');
+                        itemDiv.innerHTML = `<div class="itinerary-item"><strong>${item.time}</strong> - ${item.event}: ${item.place}</div>`;
+                        if (item.image) {
+                            const img = document.createElement('img');
+                            img.src = item.image;
+                            img.width = 300;
+                            itemDiv.appendChild(img);
+                        }
+                        itineraryContainer.appendChild(itemDiv);
+                    });
+
+                    // Add a line break after each day
+                    const hr = document.createElement('hr');
+                    itineraryContainer.appendChild(hr);
+                }
+                showSaveButton();  })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>

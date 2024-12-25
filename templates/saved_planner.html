@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Planner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Your Saved Trip Planner</h1>
+        <a href="{{ url_for('index') }}">Home</a> | 
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </header>
+    <main>
+        {% if itinerary_details %}
+        <h2>Planned Itinerary</h2>
+        <div class="itinerary-container">
+            {% for item in itinerary_details %}
+            <div class="itinerary-item">
+                <img src="{{ item.image }}" alt="{{ item.name }}" class="itinerary-image">
+                <h3>{{ item.name }}</h3>
+                <p>{{ item.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>No saved planner found. <a href="{{ url_for('plan') }}">Plan a new trip</a></p>
+        {% endif %}
+    </main>
+</body>
+</html>

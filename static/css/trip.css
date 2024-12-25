@@ -35,7 +35,7 @@ header{
    /* background-color: #fff; */
    box-shadow: 0 0 10px rgba(0,0,0, 0.1);}
 .logo img{
-    max-width: 15%;
+    max-width: 10%;
     border-radius: 50%;
     position: relative;
     left: 50px;
@@ -61,7 +61,7 @@ width: 100%;
 .nav-menu li{
     list-style: none;
     font-weight: bolder;
-    margin-right: 100px;
+    margin-right: 50px;
 }
 .hero{
     height: 600px; 
@@ -182,9 +182,10 @@ width: 100%;
 .footer {
     background-color: #007BFF; /* Blue theme */
     color: white;
-    padding: 40px 20px;
+    padding: 20px 20px;
     font-family: 'Arial', sans-serif;
     text-align: center;
+    margin-top: 20px;
 }
 
 .footer-container {
