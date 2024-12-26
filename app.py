@@ -9,10 +9,10 @@ from pymongo import MongoClient
 import bcrypt
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 import os
-from flask_talisman import Talisman
+
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
-Talisman(app)
+
 # Email configuration
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
