@@ -9,6 +9,15 @@
     
 </head>
 <style>
+    #toggle-planner {
+    width: 80px;
+    border-radius: 5px;
+    align-self: center;}
+#toggle-planner:hover {
+    background-color: #45a049;
+    color: white;
+    cursor: pointer;
+}
     .container {
 width: 25%;
 margin: 0 auto;
@@ -105,21 +114,41 @@ background-color: #45a049;}
         
 
     {% if saved_planner %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleButton = document.getElementById('toggle-planner');
+            const plannerContent = document.querySelector('.planner-content');
+    
+            toggleButton.addEventListener('click', function() {
+                if (plannerContent.style.maxHeight === '0px' || !plannerContent.style.maxHeight) {
+                plannerContent.style.maxHeight = plannerContent.scrollHeight + 'px';
+                plannerContent.style.opacity = '1';
+                // plannerContent.style.transition = 'min-height 0.5s ease';
+                toggleButton.textContent = 'Hide Planner';
+            } else {
+                plannerContent.style.maxHeight = '0';
+                plannerContent.style.opacity = '0';
+                toggleButton.textContent = 'Show Planner';
+            }
+            });
+        });
+    </script>
     <div class="container" style="margin-top: 10px;">
         <section id="home">
             <h1>Welcome, {{ user }}!</h1>
-            <h2>Your saved trip planner:</h2>
+            <h2>Your saved trip planner:</h2><br>
 
             
-                <div class="saved-planner">
-                    <h3> Your Trip Itinerary</h2>
-                    <!-- Render the saved planner HTML directly -->
-                    <div class="planner-content">
+                <div class="saved-planner" style="display: flex;flex-wrap: nowrap;max-height:560px;flex-direction: column; ">
+                    <h3 style="align-self: center;"> Your Trip Itinerary</h3><br>
+                        <button id="toggle-planner" class="btn-toggle">Show Planner</button><br>
+                    
+                    <div class="planner-content" style="max-height: 0; overflow: hidden; opacity: 0; transition:max-height 0.5s ease,opacity 0.5s ease-in-out;overflow-y: auto;">
                         {{ saved_planner | safe }}
                     </div>
                 </div>
-
-            
+                
+            </div>
         </section>
 
         <div class="planner-actions">
@@ -127,6 +156,7 @@ background-color: #45a049;}
             <center><a href="{{ url_for('plan') }}" class="btn-plan-trip">Plan a New Trip</a></center>
         </div>
     </div>
+    
     {% endif %}
     </main>
         <section class="destination" id="destination">
