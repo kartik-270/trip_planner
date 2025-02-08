@@ -17,13 +17,13 @@ app.secret_key = os.urandom(24)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'kartik2310179@akgec.ac.in'  # Replace with your email
-app.config['MAIL_PASSWORD'] = 'etrf leme yhgk bwup'  # Replace with your email password
-app.config['MAIL_DEFAULT_SENDER'] = 'kartik2310179@akgec.ac.in'
+app.config['MAIL_USERNAME'] = '<e_mail>'  # Replace with your email
+app.config['MAIL_PASSWORD'] = '<pass>'  # Replace with your email password
+app.config['MAIL_DEFAULT_SENDER'] = '<e-mail>'
 mail = Mail(app)
 
 # MongoDB configuration
-client = MongoClient('mongodb+srv://kartik2310179:2H1yMr6PjfGhyZIL@cluster0.95nrk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+client = MongoClient('mongo_uri')  # Replace with your mongodb uri or local mongodb address
 db = client['trip_planner_db']
 users_collection = db['users']
 
